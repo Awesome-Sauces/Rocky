@@ -33,12 +33,16 @@ public class Main {
 
          */
 
-        String input = "\"frfrfr\"";
+        String input = "\"wadad\"nhn";
 
 
         List<Token> tokens = lex(input);
         for(Token t : tokens) {
             System.out.println(t);
+        }
+
+        if(!tokens.isEmpty() && tokens.get(tokens.size()-1).c.equals(";")){
+            System.out.println("LINE:END");
         }
 
     }

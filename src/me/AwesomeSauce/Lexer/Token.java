@@ -15,6 +15,8 @@ public class Token {
             return "ATOM<" + c + ">";
         }else if (t == Type.NUMBER) {
             return "NUMBER<" + c + ">";
+        }else if (t == Type.STRING) {
+            return "STRING<" + c + ">";
         }
         return t.toString();
     }

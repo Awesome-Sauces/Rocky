@@ -11,6 +11,7 @@ public class Lexer {
 
     public static List<String> lTokens = new ArrayList<>();
     private static boolean onString = false;
+    private static boolean lastOnString = false;
 
     /*
      * Given a String, and an index, get the atom starting at that index
@@ -29,23 +30,10 @@ public class Lexer {
         return s.substring(i, j);
     }
 
-    public static String charAt(String string, int i){
-        List<String> chars = new ArrayList<>();
-
-        // For each character in the String
-        // add it to the List
-        for (char ch : string.toCharArray()) {
-
-            chars.add(String.valueOf(ch));
-        }
-
-        return chars.get(i);
-    }
-
     public static List<Token> lex(String input) {
         List<Token> result = new ArrayList<Token>();
         for(int i = 0; i < input.length(); ) {
-            switch(charAt(input, i)) {
+            switch(String.valueOf(input.charAt(i))) {
                 case "=":
                     result.add(new Token(Type.EQUAL, "="));
                     i++;
@@ -87,17 +75,26 @@ public class Lexer {
                     if(Character.isWhitespace(input.charAt(i))) {
                         i++;
                     }else{
+                        /*
+                        if(String.valueOf(input.charAt(i)).equals("\"")) {
 
-                        if(String.valueOf(input.charAt(i)).equals("\"")) onString = !onString;
+                            if(!lastOnString) onString = !onString;
+                        }
 
-                        System.out.println(onString + ":" + input.charAt(i));
+                        System.out.println(onString + ":" + input.charAt(i) + ":" + lastOnString);
 
-                        if(onString){
+                        if(onString ){
                             String atom = getAtom(input, i);
                             i += atom.length();
-                            result.add(new Token(Type.ATOM, atom));
+                            if(lastOnString) {
+                                result.add(new Token(Type.STRING, atom));
+                                lastOnString = false;
+                                break;
+                            }
+                            //onString = false;
+                            lastOnString = true;
                             break;
-                        }else if(Character.isDigit(input.charAt(i))){
+                        }else */ if(Character.isDigit(input.charAt(i))){
                             String atom = getAtom(input, i);
                             i += atom.length();
                             result.add(new Token(Type.NUMBER, atom));
