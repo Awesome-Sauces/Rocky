@@ -1,7 +1,9 @@
-rocky main;
+rocky "main";
 
 func main(int $y){
     printf($y);
+
+    printf("Hello");
 
     $y = $y + 2;
 

@@ -70,6 +70,9 @@ public class Lexer {
                     result.add(new Token(Type.RPAREN, ")"));
                     i++;
                     break;
+                case ";":
+                    result.add(new Token(Type.END, ";"));
+                    return result;
                 default:
 
                     if(Character.isWhitespace(input.charAt(i))) {

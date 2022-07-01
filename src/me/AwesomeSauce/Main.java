@@ -1,7 +1,11 @@
 package me.AwesomeSauce;
 
+import me.AwesomeSauce.Lexer.LineProfiler;
 import me.AwesomeSauce.Lexer.Token;
+import me.AwesomeSauce.Lexer.Type;
+import me.AwesomeSauce.utils.FileDigest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static me.AwesomeSauce.Lexer.Lexer.*;
@@ -20,6 +24,7 @@ public class Main {
         lTokens.add(" ");
         lTokens.add("*");
         lTokens.add("^");
+        lTokens.add(";");
         //lTokens.add("\"");
 
 
@@ -33,17 +38,31 @@ public class Main {
 
          */
 
-        String input = "\"wadad\"nhn";
+        ArrayList<String> list = null;
+
+        try{
+            list = new FileDigest("main.rocky").file;
+        }catch (Exception ignored){}
 
 
-        List<Token> tokens = lex(input);
-        for(Token t : tokens) {
-            System.out.println(t);
+        assert list != null;
+        for(String string: list){
+
+
+            List<Token> tokens = lex(string);
+
+            tokens = new LineProfiler(tokens, 0).tokens;
+
+            for(Token t : tokens){
+                System.out.println(t.t + ":" + t.c);
+            }
+
+            if(!tokens.isEmpty() && tokens.get(tokens.size()-1).t.equals(Type.END)){
+                System.out.println("LINE:END:" + Math.max((list.indexOf(string)-1), 0));
+            }
         }
 
-        if(!tokens.isEmpty() && tokens.get(tokens.size()-1).c.equals(";")){
-            System.out.println("LINE:END");
-        }
+
 
     }
 }
