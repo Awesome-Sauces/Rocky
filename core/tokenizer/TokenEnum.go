@@ -19,6 +19,8 @@ const (
 	COMMENT                         // EnumIndex = 12
 	RSQUAREBRACKET                  // EnumIndex = 13
 	LSQUAREBRACKET                  // EnumIndex = 14
+	EQUAL                           // EnumIndex = 15
+	STOP                            // EnumIndex = 16
 )
 
 // Converting Enum to string
@@ -52,6 +54,10 @@ func (tk TOKEN) ToString() string {
 		return "RSQUAREBRACKET"
 	case LSQUAREBRACKET:
 		return "LSQUAREBRACKET"
+	case EQUAL:
+		return "EQUAL"
+	case STOP:
+		return "STOP"
 	default:
 		return "ERROR"
 	}

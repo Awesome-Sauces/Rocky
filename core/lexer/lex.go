@@ -1,7 +1,6 @@
 package lexer
 
 import (
-	"fmt"
 	"strings"
 
 	// Rocky Imports
@@ -16,11 +15,19 @@ func max(a int, b int) int {
 	}
 }
 
-func LoopString(String *string) *string {
+func min(a int, b int) int {
+	if b < a || b == a {
+		return b
+	} else {
+		return a
+	}
+}
+
+func LoopString(String *string) map[int]*tokenizer.Token {
 
 	temp := strings.Split(*String, "\n")
 
-	tokens := make(map[int]tokenizer.Token)
+	tokens := make(map[int]*tokenizer.Token)
 
 	for LOOP := 1; LOOP <= len(temp); LOOP++ {
 		temp_index := LOOP - 1
@@ -39,51 +46,132 @@ func LoopString(String *string) *string {
 		*/
 	}
 
-	for _, element := range tokens {
-		fmt.Println("TYPE -> " + element.GetType().ToString() + " VALUE -> " + element.GetValue())
+	for index, element := range tokens {
+		element.SetOrder(index)
 	}
 
-	return String
+	return tokens
 }
 
-func iterString(String string, tokens map[int]tokenizer.Token) map[int]tokenizer.Token {
+func iterString(String string, tokens map[int]*tokenizer.Token) map[int]*tokenizer.Token {
 
 	position := 0
 	char := ""
 	word := ""
 
 	nextChar := func() {
-		char = String[max(position-1, 0):position]
+		char = String[max(position-1, 0):min(position, len(String))]
 		if char != " " {
 			word += char
 		}
 		position++
 	}
 
-	getToken := func() (bool, tokenizer.Token) {
-		switch word {
+	isSingleton := func(character string) bool {
+		switch character {
+		case "+":
+			return true
+		case "-":
+			return true
+		case "*":
+			return true
+		case "/":
+			return true
+		case "=":
+			return true
+		case "(":
+			return true
+		case ")":
+			return true
+		case "{":
+			return true
+		case "}":
+			return true
+		case "#":
+			return true
+		case "[":
+			return true
+		case "]":
+			return true
+		case ";":
+			return true
+
+		default:
+			return false
+		}
+	}
+
+	getToken := func(words string) (bool, tokenizer.Token) {
+		words = strings.TrimSpace(words)
+
+		switch words {
 		case "int":
+			return true, *tokenizer.CreateToken(tokenizer.TOKEN(11), words, 0)
 		case "string":
+			return true, *tokenizer.CreateToken(tokenizer.TOKEN(11), words, 0)
+		case "double":
+			return true, *tokenizer.CreateToken(tokenizer.TOKEN(11), words, 0)
 		case "list":
-			return true, *tokenizer.CreateToken(tokenizer.TOKEN(1), word)
+			return true, *tokenizer.CreateToken(tokenizer.TOKEN(11), words, 0)
+		case "+":
+			return true, *tokenizer.CreateToken(tokenizer.TOKEN(1), words, 0)
+		case "-":
+			return true, *tokenizer.CreateToken(tokenizer.TOKEN(2), words, 0)
+		case "*":
+			return true, *tokenizer.CreateToken(tokenizer.TOKEN(4), words, 0)
+		case "/":
+			return true, *tokenizer.CreateToken(tokenizer.TOKEN(3), words, 0)
+		case "=":
+			return true, *tokenizer.CreateToken(tokenizer.TOKEN(15), words, 0)
+		case "(":
+			return true, *tokenizer.CreateToken(tokenizer.TOKEN(5), words, 0)
+		case ")":
+			return true, *tokenizer.CreateToken(tokenizer.TOKEN(6), words, 0)
+		case "{":
+			return true, *tokenizer.CreateToken(tokenizer.TOKEN(8), words, 0)
+		case "}":
+			return true, *tokenizer.CreateToken(tokenizer.TOKEN(7), words, 0)
+		case "#":
+			return true, *tokenizer.CreateToken(tokenizer.TOKEN(12), words, 0)
+		case "[":
+			return true, *tokenizer.CreateToken(tokenizer.TOKEN(14), words, 0)
+		case "]":
+			return true, *tokenizer.CreateToken(tokenizer.TOKEN(13), words, 0)
+		case ";":
+			return true, *tokenizer.CreateToken(tokenizer.TOKEN(16), words, 0)
 		}
 
-		return true, *tokenizer.CreateToken(0, word)
+		if len(words) == 0 {
+			return false, *tokenizer.CreateToken(0, words, 0)
+		}
+
+		return true, *tokenizer.CreateToken(10, words, 0)
+
+		//return false, *tokenizer.CreateToken(0, words, 0)
 	}
 
 	for true {
 
 		nextChar()
 
-		fmt.Println(word)
+		var created bool
+		var token tokenizer.Token
 
-		if char == " " {
-			fmt.Println(word)
+		if char == " " ||
+			isSingleton(char) {
+			word = strings.ReplaceAll(word, " ", "")
+			word = strings.ReplaceAll(word, char, "")
 
-			created, token := getToken()
+			created, token := getToken(word)
 
 			if created {
-				tokens[len(tokens)] = token
+				tokens[len(tokens)] = &token
+			}
+
+			created2, token2 := getToken(char)
+
+			if created2 {
+				tokens[len(tokens)] = &token2
 			}
 
 			word = ""
@@ -91,16 +179,22 @@ func iterString(String string, tokens map[int]tokenizer.Token) map[int]tokenizer
 			continue
 		}
 
-		if position > len(String) {
+		if position-1 > len(String) {
 			break
 		}
 
-		//mt.Println(word)
-
-		created, token := getToken()
+		if isSingleton(char) {
+			word = strings.ReplaceAll(word, char, "")
+			created, token = getToken(char)
+		}
 
 		if created {
-			tokens[len(tokens)+1] = token
+
+			if created {
+				tokens[len(tokens)] = &token
+			}
+
+			word = ""
 
 			continue
 		}

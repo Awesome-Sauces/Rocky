@@ -1,0 +1,27 @@
+All types that will be in rocky
+
+Simple
+
+UNFINISHED - int - can store up to integer limit
+
+UNFINISHED - string - can store any string and can even be +='d to just like an int
+
+UNFINISHED - double - I don't like floats so it will be a double instead
+
+Non - Simple
+
+UNFINISHED - class - this will tell rocky that you are making a "class" type. Classes in rocky will work
+	as a type but are an extension of the normal "type"
+	
+UNFINISHED - list - The list type will be an extension of the "class" type, it will hold data in string
+		    form unless told to use int form of storage 	
+	
+UNFINISHED - enum - This will work just as java enums but when called upon will return an int that
+		    say it's position in the enum "list" (Enums are an extension of lists)	
+		    
+General Program Stuff
+
+UNFINISHED - func - This will be like a normal function that you can find in Python, Golang and 
+                    many more programming languages.
+                    
+UNFINISHED - variable/var - This will be stored GLOBALLY
