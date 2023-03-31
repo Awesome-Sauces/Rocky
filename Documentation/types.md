@@ -9,7 +9,7 @@ class: represents a class value built from whatever.
 
 ## Bool use cases
 Here is how to use a bool in Rocky:
-```rocky
+```python
 import stdlib as utils
 import concurrency as con
 import iterate as iter
@@ -37,7 +37,7 @@ if (case){
 This will simply make a second thread that will run for 1 second and print out the status for each time it is ran.
 
 Here I'll show you how to pass a variable through multiple functions and classes
-```rocky
+```python
 import stdlib as utils
 import memory as mem
 
