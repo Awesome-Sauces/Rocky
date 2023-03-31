@@ -4,7 +4,7 @@ Simple
 
 UNFINISHED - int - can store up to integer limit
 
-UNFINISHED - string - can store any string and can even be +='d to just like an int
+UNFINISHED - String - can store any string and can even be +='d to just like an int
 
 UNFINISHED - double - I don't like floats so it will be a double instead
 
