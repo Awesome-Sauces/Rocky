@@ -21,7 +21,54 @@ const (
 	LSQUAREBRACKET                  // EnumIndex = 14
 	EQUAL                           // EnumIndex = 15
 	STOP                            // EnumIndex = 16
+	STRING                          // EnumIndex = 17
+	NONE                            // EnumIndex = 18
 )
+
+func FromString(tk string) TOKEN {
+	if len(tk) == 0 || tk == " " {
+		return NONE
+	}
+
+	switch tk {
+	case "+":
+		return ADD
+	case "-":
+		return SUBTRACT
+	case "*":
+		return MULTIPLY
+	case "/":
+		return DIVIDE
+	case "=":
+		return EQUAL
+	case "(":
+		return LPAREN
+	case ")":
+		return RPAREN
+	case "{":
+		return LBRACKET
+	case "}":
+		return RBRACKET
+	case "#":
+		return COMMENT
+	case "[":
+		return LSQUAREBRACKET
+	case "]":
+		return RSQUAREBRACKET
+	case ";":
+		return STOP
+	case "int":
+		return TYPE
+	case "String":
+		return TYPE
+	case "double":
+		return TYPE
+	case "list":
+		return TYPE
+	default:
+		return IDENTIFIER
+	}
+}
 
 // Converting Enum to string
 func (tk TOKEN) ToString() string {
@@ -58,6 +105,10 @@ func (tk TOKEN) ToString() string {
 		return "EQUAL"
 	case STOP:
 		return "STOP"
+	case STRING:
+		return "STRING"
+	case NONE:
+		return "NONE"
 	default:
 		return "ERROR"
 	}
