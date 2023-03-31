@@ -63,3 +63,31 @@ Dog dog = new Dog(true);
 bool alive = dog.getAlive();
 
 ```
+So this is how to use a bool or really any vanilla data type provided by Rocky's standard lib.
+Now we will show you how to create a custom Data Type that is constructed based off of itself.
+
+# Custom Data Type Creation
+```python
+import stdlib as stdlib
+
+class ArrayList extends DataType {
+    closed DataType type;
+    
+    # We must work with bytes to create this ArrayList
+    # We must avoid using the list type to create this ArrayList type
+    # That way we don't have coliding types.
+    closed bytes storage;
+    
+    func ArrayList(DataType type){
+        this.type = type;
+    }
+    
+    func AddValue(var data){
+        if (stdlib.type(data) != this.type){
+            return new stdlib.Error("Cannot use %s DataType", stdlib.toString(stdlib.type(data)));
+    
+    # Write a simple parser to parse the byte variable.
+    func parseBytes(){
+        
+    }
+}    
