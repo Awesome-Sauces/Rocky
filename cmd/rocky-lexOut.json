@@ -1,0 +1,1 @@
+[{"Order":0,"Type":"TYPE","Value":"int"},{"Order":1,"Type":"IDENTIFIER","Value":"num"},{"Order":2,"Type":"EQUAL","Value":"="},{"Order":3,"Type":"NUMBER","Value":"12345"},{"Order":4,"Type":"STOP","Value":";"}]

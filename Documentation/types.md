@@ -85,9 +85,12 @@ class ArrayList extends DataType {
     func AddValue(var data){
         if (stdlib.type(data) != this.type){
             return new stdlib.Error("Cannot use %s DataType", stdlib.toString(stdlib.type(data)));
+        }
+    }
     
     # Write a simple parser to parse the byte variable.
     func parseBytes(){
         
     }
 }    
+```

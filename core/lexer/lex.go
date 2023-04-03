@@ -136,67 +136,82 @@ func iterString(String string, tokens map[int]*tokenizer.Token) map[int]*tokeniz
 			return true
 		case ".":
 			return true
-
 		default:
 			return false
 		}
 	}
 
-	builder := false
+	builder := "none"
+
+	builderAvailiable := func() bool {
+		switch builder {
+		case "string":
+			return false
+		case "number":
+			return false
+		default:
+			return true
+		}
+	}
 
 	for true {
 
 		nextChar()
 
+		if builderAvailiable() && char == "#" {
+			break
+		}
+
 		// This number detection code is a little buggy when encountering the builder
 		// Being used by a string constructor
-		if isDigit(char) && !builder {
-			builder = true
-		} else if builder && !isDigit(char) && char != "." && !strings.Contains(word, "\"") {
-			tokens[len(tokens)] = tokenizer.CreateToken(tokenizer.NUMBER, strings.ReplaceAll(word, char, ""), 0)
+		if isDigit(char) && builderAvailiable() {
+			builder = "number"
+		} else if !builderAvailiable() && !isDigit(char) && char != "." && !strings.Contains(word, "\"") {
+			tokens[len(tokens)] = tokenizer.CreateToken(tokenizer.NUMBER, strings.TrimLeft(strings.ReplaceAll(word, char, ""), " "), 0)
 			word = char
 
-			builder = false
+			builder = "none"
 		}
 
 		// Works perfectly solo but needs
 		// More compatibility with Numbers
 		if char == "\"" {
-			if builder {
-				tokens[len(tokens)] = tokenizer.CreateToken(tokenizer.STRING, word, 0)
+			if !builderAvailiable() {
+				tokens[len(tokens)] = tokenizer.CreateToken(tokenizer.STRING, strings.TrimLeft(word, " "), 0)
 				word = ""
+				builder = "none"
 			} else {
-				builder = true
+				builder = "string"
 			}
-		}
+		} else {
+			if isSingleton(word) {
+				tokenType := tokenizer.FromString(word)
 
-		if isSingleton(word) {
-			tokenType := tokenizer.FromString(word)
+				if tokenType.ToString() != "NONE" {
+					tokens[len(tokens)] = tokenizer.CreateToken(tokenType, word, 0)
+				}
 
-			if tokenType.ToString() != "NONE" {
-				tokens[len(tokens)] = tokenizer.CreateToken(tokenType, word, 0)
-			}
-
-			word = ""
-		}
-
-		if !builder && (isSingleton(char) || char == " ") && len(word) > 1 {
-			word = strings.ReplaceAll(word, char, "")
-			tokenType := tokenizer.FromString(word)
-
-			if tokenType.ToString() != "NONE" {
-				tokens[len(tokens)] = tokenizer.CreateToken(tokenType, word, 0)
+				word = ""
 			}
 
-			tokenType = tokenizer.FromString(char)
+			if builderAvailiable() && (isSingleton(char) || char == " ") && len(word) > 1 {
+				word = strings.ReplaceAll(word, char, "")
+				tokenType := tokenizer.FromString(word)
 
-			if tokenType.ToString() != "NONE" {
-				tokens[len(tokens)] = tokenizer.CreateToken(tokenType, char, 0)
+				if tokenType.ToString() != "NONE" {
+					tokens[len(tokens)] = tokenizer.CreateToken(tokenType, word, 0)
+				}
+
+				tokenType = tokenizer.FromString(char)
+
+				if tokenType.ToString() != "NONE" {
+					tokens[len(tokens)] = tokenizer.CreateToken(tokenType, char, 0)
+				}
+
+				word = ""
+
+				continue
 			}
-
-			word = ""
-
-			continue
 		}
 
 		if position > len(String) {

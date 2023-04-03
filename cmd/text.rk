@@ -1,7 +1,1 @@
-String out = "Hello World";
-
-print(out);
-
-int number = 12345;
-
-print(number);
+int num = 12345;

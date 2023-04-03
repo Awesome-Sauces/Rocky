@@ -23,6 +23,7 @@ const (
 	STOP                            // EnumIndex = 16
 	STRING                          // EnumIndex = 17
 	NONE                            // EnumIndex = 18
+	EXTENSION                       // EnumIndex = 19
 )
 
 func FromString(tk string) TOKEN {
@@ -57,6 +58,8 @@ func FromString(tk string) TOKEN {
 		return RSQUAREBRACKET
 	case ";":
 		return STOP
+	case ".":
+		return EXTENSION
 	case "int":
 		return TYPE
 	case "String":
@@ -107,6 +110,8 @@ func (tk TOKEN) ToString() string {
 		return "STOP"
 	case STRING:
 		return "STRING"
+	case EXTENSION:
+		return "EXTENSION"
 	case NONE:
 		return "NONE"
 	default:
