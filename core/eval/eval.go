@@ -8,7 +8,7 @@ import (
 
 func Eval(tokenMap map[int]*tokenizer.Token) {
 
-	math := NewMathematical("5*3")
+	math := NewMathematical("6/2")
 
 	fmt.Println(math.GetOutput())
 

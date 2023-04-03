@@ -3,6 +3,7 @@ package eval
 import (
 	"fmt"
 	"unicode"
+	"math"
 )
 
 type Mathematical struct {
@@ -38,14 +39,18 @@ func evalMathExpr(expr string) (float64, error) {
 	// Initialize the operator variable
 	var op rune
 
+	// Initialize the flag variable to keep track of whether the current digit
+	// is the first digit of a new operand or not
+	firstDigit := true
+
 	// Iterate over the characters in the expression
 	for _, c := range expr {
 		switch c {
-		case '+', '-', '*', '/':
+		case '+', '-', '*', '/', '^':
 			// Push the current operand onto the stack and clear it
 			value, err := toFloat(stack)
 			if err != nil {
-				return 0, fmt.Errorf("invalid expression")
+				return 0, err
 			}
 			if op == '+' {
 				stack[len(stack)-1] += value
@@ -53,6 +58,8 @@ func evalMathExpr(expr string) (float64, error) {
 				stack[len(stack)-1] -= value
 			} else if op == '*' {
 				stack[len(stack)-1] *= value
+			} else if op == '^' {
+				stack[len(stack)-1] = math.Pow(stack[len(stack)-1], value)
 			} else if op == '/' {
 				if value == 0 {
 					return 0, fmt.Errorf("division by zero")
@@ -60,28 +67,41 @@ func evalMathExpr(expr string) (float64, error) {
 				stack[len(stack)-1] /= value
 			}
 			op = c
+
+			// Reset the firstDigit flag
+			firstDigit = true
 		default:
 			// Append the current digit to the current operand
-			if len(stack) > 0 && op == ' ' {
-				return 0, fmt.Errorf("invalid expression")
-			}
-			if len(stack) == 0 || op == '+' || op == '-' {
+			// This if statement has an issue with parenthesis
+			// Give this prompt to ChatGPT for potential Fix
+			// Prompt: It seems evalMathExpr has issue understanding 
+			//and working with parenthesis, because the equation: (6/2)^3 
+			// doesn't work but the equation: 6/2^3 does. Can you fix this about evalMathExpr
+			if len(stack) > 0 && op == ' ' && !firstDigit {
+				continue
+			}else if len(stack) == 0 || op == '+' || op == '-' {
 				stack = append(stack, float64(toDigit(c)))
+				fmt.Println(stack, float64(toDigit(c)))
 			} else if op == '*' {
 				stack[len(stack)-1] *= float64(toDigit(c))
+			} else if op == '^' {
+				stack[len(stack)-1] = math.Pow(stack[len(stack)-1], float64(toDigit(c)))
 			} else if op == '/' {
 				if toDigit(c) == 0 {
 					return 0, fmt.Errorf("division by zero")
 				}
 				stack[len(stack)-1] /= float64(toDigit(c))
 			}
+
+			// Set the firstDigit flag to false
+			firstDigit = false
 			op = ' '
 		}
 	}
 
 	// The final value on the stack is the result of the expression
 	if len(stack) != 1 {
-		return 0, fmt.Errorf("invalid expression")
+		return 0, fmt.Errorf("invalid expression 2")
 	}
 	return stack[0], nil
 }
