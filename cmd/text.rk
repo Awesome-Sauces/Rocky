@@ -1,1 +1,5 @@
 int num = 12345;
+int second_number = 12345;
+
+int third_number = "343535";
+String word = 142324;

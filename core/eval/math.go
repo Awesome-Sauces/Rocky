@@ -2,8 +2,8 @@ package eval
 
 import (
 	"fmt"
-	"unicode"
 	"math"
+	"unicode"
 )
 
 type Mathematical struct {
@@ -74,12 +74,12 @@ func evalMathExpr(expr string) (float64, error) {
 			// Append the current digit to the current operand
 			// This if statement has an issue with parenthesis
 			// Give this prompt to ChatGPT for potential Fix
-			// Prompt: It seems evalMathExpr has issue understanding 
-			//and working with parenthesis, because the equation: (6/2)^3 
+			// Prompt: It seems evalMathExpr has issue understanding
+			//and working with parenthesis, because the equation: (6/2)^3
 			// doesn't work but the equation: 6/2^3 does. Can you fix this about evalMathExpr
 			if len(stack) > 0 && op == ' ' && !firstDigit {
 				continue
-			}else if len(stack) == 0 || op == '+' || op == '-' {
+			} else if len(stack) == 0 || op == '+' || op == '-' {
 				stack = append(stack, float64(toDigit(c)))
 				fmt.Println(stack, float64(toDigit(c)))
 			} else if op == '*' {

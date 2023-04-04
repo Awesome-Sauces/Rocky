@@ -54,3 +54,22 @@ type Variable struct {
 	Type VTYPE
 	Data string
 }
+
+func NewVariable(Name string, Type VTYPE, Data string) *Variable {
+	return &Variable{Name: Name, Type: Type, Data: Data}
+}
+
+func NewVType(Type string) VTYPE {
+	switch Type {
+	case "int":
+		return INT
+	case "String":
+		return STRING
+	case "double":
+		return DOUBLE
+	case "class":
+		return CLASS
+	default:
+		return NONE
+	}
+}
