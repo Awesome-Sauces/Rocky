@@ -46,14 +46,33 @@ func Eval(tokenMap map[int]*tokenizer.Token) {
 		}
 
 		if Type == tokenizer.IDENTIFIER &&
-			tokenMap[i+1].Type == tokenizer.LPAREN &&
-			tokenMap[i+3].Type == tokenizer.RPAREN &&
-			tokenMap[i+4].Type == tokenizer.STOP {
-			function := GetFunction(value)
+			tokenMap[i+1].Type == tokenizer.LPAREN {
 
-			if tokenMap[i+2].Type == tokenizer.IDENTIFIER {
-				function.SetVariableList(*NewVariableList(GetVariable(tokenMap[i+2].Value)))
+			// Find the end point of function call
+			index := 1
+			for {
+				index++
+				if tokenMap[i+index].Type == tokenizer.RPAREN {
+					break
+				}
+
+				if index >= 1000 {
+					break
+				}
 			}
+
+			function := GetFunction(value)
+			list := make(map[string]*Variable)
+
+			for e := 1; e < index; e++ {
+				if tokenMap[i+e].Type == tokenizer.IDENTIFIER {
+
+					list[tokenMap[i+e].Value] = GetVariable(tokenMap[i+e].Value)
+
+				}
+			}
+
+			function.SetVariableList(list)
 
 			function.Execute()
 		}

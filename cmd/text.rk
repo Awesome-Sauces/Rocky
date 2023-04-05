@@ -1,3 +1,5 @@
 String hello = "Hello World";
 
-print(hello);
+int number = 124245204925;
+
+print(hello, number);

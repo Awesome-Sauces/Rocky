@@ -24,12 +24,9 @@ func DefaultRegistery() {
 		make(map[string]*Variable), make(map[string]*Action), NewArgs("input-STRING"),
 		func(function *Function) {
 			output := ""
-			for _, vType := range function.Args {
-				for _, variable := range function.VariableList {
-					if variable.Type == vType {
-						output += variable.Data
-					}
-				}
+
+			for _, variable := range function.VariableList {
+				output += variable.Data
 			}
 
 			fmt.Println(strings.ReplaceAll(output, "\"", ""))
