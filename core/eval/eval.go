@@ -8,6 +8,8 @@ import (
 
 func Eval(tokenMap map[int]*tokenizer.Token) {
 
+	DefaultRegistery()
+
 	/*
 				math := NewMathematical("6/2")
 
@@ -18,8 +20,6 @@ func Eval(tokenMap map[int]*tokenizer.Token) {
 					" Value: "+value)
 
 	*/
-
-	variables := make(map[int]*Variable)
 
 	for i := 0; i < len(tokenMap); i++ {
 
@@ -40,9 +40,18 @@ func Eval(tokenMap map[int]*tokenizer.Token) {
 				continue
 			}
 
-			variables[len(variables)] = NewVariable(tokenMap[i+1].Value,
+			RegisterVariable(NewVariable(tokenMap[i+1].Value,
 				NewVType(value),
-				tokenMap[i+3].Value)
+				tokenMap[i+3].Value))
+		}
+
+		if Type == tokenizer.IDENTIFIER &&
+			tokenMap[i+1].Type == tokenizer.LPAREN &&
+			tokenMap[i+3].Type == tokenizer.RPAREN &&
+			tokenMap[i+4].Type == tokenizer.STOP {
+			function := GetFunction(value)
+
+			function.Execute()
 		}
 
 		/*
@@ -55,8 +64,9 @@ func Eval(tokenMap map[int]*tokenizer.Token) {
 
 	}
 
-	for i := 0; i < len(variables); i++ {
-		fmt.Println("Name: " + variables[i].Name + " Type: " + variables[i].Type.ToString() + " Data: " + variables[i].Data)
+	for var_name, var_obj := range variables {
+		fmt.Println("Name: " + var_name + " Type: " +
+			var_obj.Type.ToString() + " Data: " + var_obj.Data)
 	}
 
 }
