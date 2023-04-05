@@ -22,8 +22,17 @@ func GetFunction(name string) *Function {
 func DefaultRegistery() {
 	print := NewFunction("print",
 		make(map[string]*Variable), make(map[string]*Action), NewArgs("input-STRING"),
-		func() {
-			fmt.Println("Hello World")
+		func(function *Function) {
+			output := ""
+			for _, vType := range function.Args {
+				for _, variable := range function.VariableList {
+					if variable.Type == vType {
+						output += variable.Data
+					}
+				}
+			}
+
+			fmt.Println(strings.ReplaceAll(output, "\"", ""))
 		})
 
 	RegisterFunction(print)
@@ -34,12 +43,16 @@ type Function struct {
 	Args         map[string]VTYPE
 	VariableList map[string]*Variable
 	ActionList   map[string]*Action
-	Executable   func()
+	Executable   func(function *Function)
 }
 
 func (function *Function) Execute() {
 	// To be made
-	function.Executable()
+	function.Executable(function)
+}
+
+func (function *Function) SetVariableList(varList map[string]*Variable) {
+	function.VariableList = varList
 }
 
 // Structure the arg like this: name-VTYPE
@@ -56,7 +69,7 @@ func NewArgs(args ...string) map[string]VTYPE {
 }
 
 func NewFunction(Name string, VariableList map[string]*Variable,
-	ActionList map[string]*Action, ArgList map[string]VTYPE, function func()) *Function {
+	ActionList map[string]*Action, ArgList map[string]VTYPE, function func(function *Function)) *Function {
 	return &Function{Name: Name, VariableList: VariableList, ActionList: ActionList, Args: ArgList, Executable: function}
 }
 

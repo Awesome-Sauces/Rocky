@@ -51,6 +51,10 @@ func Eval(tokenMap map[int]*tokenizer.Token) {
 			tokenMap[i+4].Type == tokenizer.STOP {
 			function := GetFunction(value)
 
+			if tokenMap[i+2].Type == tokenizer.IDENTIFIER {
+				function.SetVariableList(*NewVariableList(GetVariable(tokenMap[i+2].Value)))
+			}
+
 			function.Execute()
 		}
 
