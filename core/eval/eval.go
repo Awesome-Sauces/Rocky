@@ -27,6 +27,8 @@ func Eval(tokenMap map[int]*tokenizer.Token) {
 		Type := tokenMap[i].Type
 		value := tokenMap[i].Value
 
+		//fmt.Println("Type: " + Type.ToString() + " Value: " + value)
+
 		if Type == tokenizer.TYPE &&
 			tokenMap[i+1].Type == tokenizer.IDENTIFIER &&
 			tokenMap[i+2].Type == tokenizer.EQUAL &&
