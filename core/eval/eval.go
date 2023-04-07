@@ -44,7 +44,7 @@ func Eval(tokenMap map[int]*tokenizer.Token) {
 
 			RegisterVariable(NewVariable(tokenMap[i+1].Value,
 				NewVType(value),
-				tokenMap[i+3].Value)
+				tokenMap[i+3].Value))
 		}
 
 		/*
