@@ -136,6 +136,8 @@ func iterString(String string, tokens map[int]*tokenizer.Token) map[int]*tokeniz
 			return true
 		case ".":
 			return true
+		case ",":
+			return true
 		default:
 			return false
 		}
@@ -154,7 +156,7 @@ func iterString(String string, tokens map[int]*tokenizer.Token) map[int]*tokeniz
 		}
 	}
 
-	for true {
+	for {
 
 		nextChar()
 

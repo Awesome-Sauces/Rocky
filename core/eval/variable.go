@@ -1,5 +1,43 @@
 package eval
 
+// Variable Registrar
+var variables = make(map[string]*Variable)
+
+// Function to register new variable
+func RegisterVariable(variable *Variable) {
+	variables[variable.Name] = variable
+}
+
+// Get a Variable
+func GetVariable(name string) *Variable {
+	return variables[name]
+}
+
+type Variable struct {
+	Name string
+	Type VTYPE
+	Data string
+}
+
+func NewVariable(Name string, Type VTYPE, Data string) *Variable {
+	return &Variable{Name: Name, Type: Type, Data: Data}
+}
+
+func NewVType(Type string) VTYPE {
+	switch Type {
+	case "int":
+		return INT
+	case "String":
+		return STRING
+	case "double":
+		return DOUBLE
+	case "class":
+		return CLASS
+	default:
+		return NONE
+	}
+}
+
 // TOKEN - Custom type to hold value for token type
 type VTYPE int
 
@@ -12,7 +50,7 @@ const (
 	NONE                    // EnumIndex = 3
 )
 
-func FromString(tk string) VTYPE {
+func VTypeFromString(tk string) VTYPE {
 	if len(tk) == 0 || tk == " " {
 		return NONE
 	}
@@ -46,30 +84,5 @@ func (vtype VTYPE) ToString() string {
 		return "NONE"
 	default:
 		return "ERROR"
-	}
-}
-
-type Variable struct {
-	Name string
-	Type VTYPE
-	Data string
-}
-
-func NewVariable(Name string, Type VTYPE, Data string) *Variable {
-	return &Variable{Name: Name, Type: Type, Data: Data}
-}
-
-func NewVType(Type string) VTYPE {
-	switch Type {
-	case "int":
-		return INT
-	case "String":
-		return STRING
-	case "double":
-		return DOUBLE
-	case "class":
-		return CLASS
-	default:
-		return NONE
 	}
 }
