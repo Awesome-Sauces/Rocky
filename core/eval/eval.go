@@ -43,6 +43,7 @@ func Eval(tokenMap map[int]*tokenizer.Token) {
 			variables[len(variables)] = NewVariable(tokenMap[i+1].Value,
 				NewVType(value),
 				tokenMap[i+3].Value)
+
 		}
 
 		/*
