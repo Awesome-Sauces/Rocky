@@ -44,7 +44,11 @@ func Eval(tokenMap map[int]*tokenizer.Token) {
 
 			RegisterVariable(NewVariable(tokenMap[i+1].Value,
 				NewVType(value),
+<<<<<<< HEAD
 				tokenMap[i+3].Value))
+=======
+				tokenMap[i+3].Value)
+>>>>>>> parent of a1c6f28 (nil)
 		}
 
 		/*
