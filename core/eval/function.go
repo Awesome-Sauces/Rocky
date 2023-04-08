@@ -8,7 +8,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/Awesome-Sauces/Rocky/core/utils"
 	"github.com/novalagung/golpal"
 )
 
@@ -89,15 +88,26 @@ func DefaultRegistery() {
 				return
 			}
 
-			var data, err = os.ReadFile(output)
+			// Open the file in read-only mode
+			file, err := os.Open(strings.ReplaceAll(output, "\"", ""))
+			if err != nil {
+				fmt.Println("Error:", err)
+				return
+			}
+			defer file.Close()
 
-			// Error checks *err*
-			utils.Check(err)
+			// Read the contents of the file
+			var content []byte
+			buffer := make([]byte, 100)
+			for {
+				n, err := file.Read(buffer)
+				if err != nil {
+					break
+				}
+				content = append(content, buffer[:n]...)
+			}
 
-			// Creating temp var string() doesn't wanna work
-			temp := string(data)
-
-			output, err = golpal.New().ExecuteRaw(temp)
+			output, err = golpal.New().ExecuteRaw(string(content))
 			if err != nil {
 				fmt.Println(err)
 			}
