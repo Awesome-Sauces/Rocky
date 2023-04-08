@@ -49,6 +49,9 @@ func Eval(tokenMap map[int]*tokenizer.Token) {
 =======
 				tokenMap[i+3].Value)
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> parent of a1c6f28 (nil)
+=======
 >>>>>>> parent of a1c6f28 (nil)
 =======
 >>>>>>> parent of a1c6f28 (nil)
