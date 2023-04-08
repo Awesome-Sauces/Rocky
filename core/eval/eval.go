@@ -44,17 +44,39 @@ func Eval(tokenMap map[int]*tokenizer.Token) {
 
 			RegisterVariable(NewVariable(tokenMap[i+1].Value,
 				NewVType(value),
-<<<<<<< HEAD
 				tokenMap[i+3].Value))
-=======
-				tokenMap[i+3].Value)
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> parent of a1c6f28 (nil)
-=======
->>>>>>> parent of a1c6f28 (nil)
-=======
->>>>>>> parent of a1c6f28 (nil)
+		}
+
+		if Type == tokenizer.IDENTIFIER &&
+			tokenMap[i+1].Type == tokenizer.LPAREN {
+
+			// Find the end point of function call
+			index := 1
+			for {
+				index++
+				if tokenMap[i+index].Type == tokenizer.RPAREN {
+					break
+				}
+
+				if index >= 1000 {
+					break
+				}
+			}
+
+			function := GetFunction(value)
+			list := make(map[string]*Variable)
+
+			for e := 1; e < index; e++ {
+				if tokenMap[i+e].Type == tokenizer.IDENTIFIER {
+
+					list[tokenMap[i+e].Value] = GetVariable(tokenMap[i+e].Value)
+
+				}
+			}
+
+			function.SetVariableList(list)
+
+			function.Execute()
 		}
 
 		/*
