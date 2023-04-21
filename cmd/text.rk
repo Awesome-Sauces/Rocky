@@ -1,7 +1,9 @@
-String word = "Hello";
+String word = "code";
 
-int dadadadada = 01234;
+int dadadadada = ".grk";
 
-String filename = 132424245.233232 + word + + dadadadada;
+String filename = word + dadadadada;
+
+ 
 
 goCode(filename);

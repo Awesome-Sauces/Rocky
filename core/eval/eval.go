@@ -25,6 +25,8 @@ func min(a int, b int) int {
 
 func TestEval(tokenMap map[int]*tokenizer.Token) {
 
+	DefaultRegistery()
+
 	index := -1
 	revr := 0
 	Type := tokenMap[max(index, 0)].Type
@@ -89,13 +91,8 @@ func TestEval(tokenMap map[int]*tokenizer.Token) {
 				if Type != tokenizer.STOP {
 					if Type == tokenizer.ADD {
 						forward(1)
-						fmt.Println("Hello")
 						continue
 					}
-
-					fmt.Println(index)
-
-					fmt.Println(Type.ToString())
 
 					if Type == tokenizer.IDENTIFIER {
 
@@ -125,6 +122,40 @@ func TestEval(tokenMap map[int]*tokenizer.Token) {
 			} else {
 				revert()
 			}
+		}
+
+		// Function Code
+		if Type == tokenizer.IDENTIFIER &&
+			tokenMap[index+1].Type == tokenizer.LPAREN {
+
+			// Find the end point of function call
+			i := 1
+			for {
+				index++
+				if tokenMap[i+index].Type == tokenizer.RPAREN {
+					break
+				}
+
+				if index >= 1000 {
+					break
+				}
+			}
+
+			function := GetFunction(value)
+			list := make(map[string]*Variable)
+
+			for forward(1) {
+				if Type == tokenizer.IDENTIFIER {
+					fmt.Println(value)
+
+					list[value] = GetVariable(value)
+
+				}
+			}
+
+			function.SetVariableList(list)
+
+			function.Execute()
 		}
 	}
 

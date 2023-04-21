@@ -85,14 +85,15 @@ func DefaultRegistery() {
 				output += variable.Data
 			}
 
-			if !strings.Contains(output, ".grk") {
+			/*if !strings.Contains(output, ".grk") {
 
 				fmt.Println("ROCKY ERROR: INVALID FILE TYPE " + output + "\nMust be filename.grk")
 
 				return false
-			}
+			}*/
 
 			// Open the file in read-only mode
+
 			file, err := os.Open(strings.ReplaceAll(output, "\"", ""))
 			if err != nil {
 				fmt.Println("Error:", err)
