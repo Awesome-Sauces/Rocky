@@ -56,7 +56,7 @@ func main() {
 		tokens := lexer.LoopString(file.GetFile())
 		writeTokenMapToFile(tokens, "rocky-lexOut.json")
 
-		eval.Eval(tokens)
+		eval.TestEval(tokens)
 
 		/*
 			for _, element := range tokens {

@@ -29,7 +29,7 @@ func DefaultRegistery() {
 
 	print := NewFunction("print",
 		make(map[string]*Variable), make(map[string]*Action), NewArgs("input-STRING"),
-		func(function *Function) {
+		func(function *Function) bool {
 			output := ""
 
 			for _, variable := range function.VariableList {
@@ -37,18 +37,20 @@ func DefaultRegistery() {
 			}
 
 			fmt.Println(strings.ReplaceAll(output, "\"", ""))
+
+			return true
 		})
 
 	api := NewFunction("api",
 		make(map[string]*Variable), make(map[string]*Action), NewArgs("input-STRING"),
-		func(function *Function) {
+		func(function *Function) bool {
 			output := ""
 
 			type Message struct {
 				Text string `json:"text"`
 			}
 
-			helloHandler := func(w http.ResponseWriter, r *http.Request) {
+			helloHandler := func(w http.ResponseWriter, _ *http.Request) {
 				message := Message{Text: "Hello, World!"}
 				json.NewEncoder(w).Encode(message)
 			}
@@ -61,16 +63,18 @@ func DefaultRegistery() {
 
 			http.HandleFunc("/"+output, helloHandler)
 			log.Fatal(http.ListenAndServe(":8080", nil))
+
+			return true
 		})
 
 	goCode := NewFunction("goCode",
 		make(map[string]*Variable), make(map[string]*Action), NewArgs("input-STRING"),
-		func(function *Function) {
+		func(function *Function) bool {
 
 			dir, errr := os.Getwd()
 			if errr != nil {
 				fmt.Println("Error:", errr)
-				return
+				return false
 			}
 
 			fmt.Println("Working directory:", dir)
@@ -85,14 +89,14 @@ func DefaultRegistery() {
 
 				fmt.Println("ROCKY ERROR: INVALID FILE TYPE " + output + "\nMust be filename.grk")
 
-				return
+				return false
 			}
 
 			// Open the file in read-only mode
 			file, err := os.Open(strings.ReplaceAll(output, "\"", ""))
 			if err != nil {
 				fmt.Println("Error:", err)
-				return
+				return false
 			}
 			defer file.Close()
 
@@ -112,6 +116,8 @@ func DefaultRegistery() {
 				fmt.Println(err)
 			}
 			fmt.Println(output)
+
+			return true
 		})
 
 	RegisterFunction(print)
@@ -124,7 +130,7 @@ type Function struct {
 	Args         map[string]VTYPE
 	VariableList map[string]*Variable
 	ActionList   map[string]*Action
-	Executable   func(function *Function)
+	Executable   func(function *Function) bool
 }
 
 func (function *Function) Execute() {
@@ -150,7 +156,7 @@ func NewArgs(args ...string) map[string]VTYPE {
 }
 
 func NewFunction(Name string, VariableList map[string]*Variable,
-	ActionList map[string]*Action, ArgList map[string]VTYPE, function func(function *Function)) *Function {
+	ActionList map[string]*Action, ArgList map[string]VTYPE, function func(function *Function) bool) *Function {
 	return &Function{Name: Name, VariableList: VariableList, ActionList: ActionList, Args: ArgList, Executable: function}
 }
 
@@ -172,4 +178,34 @@ func NewActionList(acts ...*Action) *map[string]*Action {
 	}
 
 	return &ActionList
+}
+
+func NewRockyFunction() {
+
+	/*
+		Example Syntax:
+
+		func function_name(arg_name int) int {
+
+			int value = arg_name*3;
+
+			return value;
+		}
+	*/
+
+	print := NewFunction("print",
+		make(map[string]*Variable), make(map[string]*Action), NewArgs("input-STRING"),
+		func(function *Function) bool {
+			output := ""
+
+			for _, variable := range function.VariableList {
+				output += variable.Data
+			}
+
+			fmt.Println(strings.ReplaceAll(output, "\"", ""))
+
+			return true
+		})
+
+	RegisterFunction(print)
 }

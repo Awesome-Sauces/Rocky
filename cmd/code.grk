@@ -1,7 +1,32 @@
 package main
 
-import "fmt"
+import (
+    "fmt"
+    "time"
+)
 
-func main(){
-    fmt.Println("Hello World")
+
+func main() {
+
+    inst := 0
+    done := true
+
+    // Calling Sleep method
+    time.Sleep(2 * time.Second)
+  
+    // Printed after sleep is over
+    fmt.Println("Sleep Over.....")
+
+    go func() {
+        for done{
+            fmt.Printf("\rOn %d", inst)
+            inst++
+        }
+    }()
+
+    time.Sleep(time.Second)
+
+    done = false
+
+    return
 }
