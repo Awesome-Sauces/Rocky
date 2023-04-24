@@ -1,16 +1,21 @@
 package eval
 
-// Variable Registrar
-var variables = make(map[string]*Variable)
+type VariableRegistrar struct {
+	variableList map[string]*Variable
+}
+
+func NewVariableRegistrar() *VariableRegistrar {
+	return &VariableRegistrar{variableList: make(map[string]*Variable)}
+}
 
 // Function to register new variable
-func RegisterVariable(variable *Variable) {
-	variables[variable.Name] = variable
+func (varR *VariableRegistrar) RegisterVariable(variable *Variable) {
+	varR.variableList[variable.Name] = variable
 }
 
 // Get a Variable
-func GetVariable(name string) *Variable {
-	return variables[name]
+func (varR *VariableRegistrar) GetVariable(name string) *Variable {
+	return varR.variableList[name]
 }
 
 type Variable struct {

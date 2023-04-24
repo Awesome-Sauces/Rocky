@@ -32,7 +32,7 @@ func TestEval(tokenMap map[int]*tokenizer.Token) {
 	Type := tokenMap[max(index, 0)].Type
 	value := tokenMap[max(index, 0)].Value
 
-	variableList := make(map[string]*Variable)
+	variables := NewVariableRegistrar()
 	//functionList := make(map[string]*Function)
 
 	forward := func(n int) bool {
@@ -96,7 +96,7 @@ func TestEval(tokenMap map[int]*tokenizer.Token) {
 
 					if Type == tokenizer.IDENTIFIER {
 
-						Data += strings.ReplaceAll(variableList[strings.ReplaceAll(value, " ", "")].Data, "\"", "")
+						Data += strings.ReplaceAll(variables.GetVariable(strings.ReplaceAll(value, " ", "")).Data, "\"", "")
 						forward(1)
 					} else {
 
@@ -117,7 +117,7 @@ func TestEval(tokenMap map[int]*tokenizer.Token) {
 			if do {
 				variable := NewVariable(Name, vType, Data)
 
-				variableList[variable.Name] = variable
+				variables.RegisterVariable(variable)
 
 			} else {
 				revert()
@@ -131,25 +131,30 @@ func TestEval(tokenMap map[int]*tokenizer.Token) {
 			// Find the end point of function call
 			i := 1
 			for {
-				index++
+				i++
 				if tokenMap[i+index].Type == tokenizer.RPAREN {
 					break
 				}
 
-				if index >= 1000 {
+				if i >= 1000 {
 					break
 				}
 			}
 
-			function := GetFunction(value)
+			function := GetFunction(strings.TrimSpace(value))
 			list := make(map[string]*Variable)
 
 			for forward(1) {
+
 				if Type == tokenizer.IDENTIFIER {
-					fmt.Println(value)
+					fmt.Println("Type Data: " + Type.ToString())
+					fmt.Println("Value Data: " + value)
 
-					list[value] = GetVariable(value)
+					vari := variables.GetVariable(strings.TrimSpace(value))
 
+					fmt.Println("Variable: ", vari)
+
+					list[value] = vari
 				}
 			}
 
@@ -159,7 +164,7 @@ func TestEval(tokenMap map[int]*tokenizer.Token) {
 		}
 	}
 
-	fmt.Println(variableList["filename"].Data)
+	fmt.Println(variables.GetVariable("filename").Data)
 
 }
 
@@ -242,7 +247,7 @@ func Eval(tokenMap map[int]*tokenizer.Token) {
 			do = ifForward(tokenizer.STOP)
 
 			if do {
-				RegisterVariable(NewVariable(Name, vType, Data))
+				NewVariable(Name, vType, Data)
 			} else {
 				revert()
 			}
@@ -290,7 +295,7 @@ func Eval(tokenMap map[int]*tokenizer.Token) {
 			for e := 1; e < index; e++ {
 				if tokenMap[i+e].Type == tokenizer.IDENTIFIER {
 
-					list[tokenMap[i+e].Value] = GetVariable(tokenMap[i+e].Value)
+					list[tokenMap[i+e].Value] = &Variable{}
 
 				}
 			}
@@ -308,11 +313,6 @@ func Eval(tokenMap map[int]*tokenizer.Token) {
 			Order: 4  Type: STOP  Value: ;
 		*/
 
-	}
-
-	for var_name, var_obj := range variables {
-		fmt.Println("Name: " + var_name + " Type: " +
-			var_obj.Type.ToString() + " Data: " + var_obj.Data)
 	}
 
 }
